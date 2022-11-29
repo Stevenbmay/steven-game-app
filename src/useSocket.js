@@ -8,9 +8,19 @@ const useSocketHook = (roomID, username) => {
     const socketRef = useRef(null)
     const [messages, setMessages] = useState([])
     const [bodys, setBody] = useState()
+    const [game, setGame] = useState()
+    const [RPS, setRPS] = useState()
+    const [opt, setOpt] = useState()
+    const [room, setRoom] = useState()
     const [letter, setLetter] = useState([])
+    let gamess
+    function setGames(games) {
+        gamess = games
+    }
+    
 
     useEffect(() => {
+        
         if (!roomID || !username) return
         socketRef.current = io("http://localhost:8080", { query: { username, roomID } })
 
@@ -26,18 +36,42 @@ const useSocketHook = (roomID, username) => {
             setBody(msg)
         })
 
+        socketRef.current.on("RPS", msg => {
+            setRPS(msg)
+        })
+
+        socketRef.current.on("opt", msg => {
+            setOpt(msg)
+        })
+
+        
+        socketRef.current.on("room num", room => {
+            setRoom(room)
+        })
+
         socketRef.current.on("new letter", msg => {
             setLetter((curr) => [...curr, msg])
         })
 
-        socketRef.current.on("banned", msg => {
-            setMessages((curr) => [...curr, msg])
+
+        socketRef.current.on("room full", () => {
+            console.log(`${roomID} is full`);
+            navigate("/joinRoom");
         })
+        
 
 
 
         socketRef.current.on("user leave", ({ username, time }) => {
             setMessages((curr) => [...curr, { time, body: `${username} has left` }])
+            setRPS("")
+            
+            if(gamess === "race"){
+                navigate('/joinRoom')
+            }
+            if(gamess === "RPS"){
+            navigate('/RPS')
+            }
         })
 
         return () => socketRef.current?.disconnect()
@@ -48,10 +82,21 @@ const useSocketHook = (roomID, username) => {
         socketRef.current.emit("new message", start)
     }
 
+    function sendName(name){
+        socketRef.current.emit("opt", name)
+        
+    }
+
+
+    function sendRPS(RPS) {
+        socketRef.current.emit("RPS", RPS)
+    }
+
     function sendLetter(letter, length) {
         socketRef.current.emit("new letter", [letter, length])
     }
-    return { sendLetter, sendMessage, messages, bodys, letter };
+
+    return { sendLetter, sendMessage, messages, bodys, letter, RPS, sendRPS, opt, room, setGames, sendName};
 };
 
 export default useSocketHook;

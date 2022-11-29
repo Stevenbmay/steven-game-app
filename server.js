@@ -5,6 +5,7 @@ const COLORS = require("./colors")
 const app = express();
 const PORT = 8080
 const server = http.createServer(app);
+let randomWords = require('random-words');
 let color = "green"
 const io = socketID(server, {
     cors: {
@@ -12,19 +13,26 @@ const io = socketID(server, {
     }
 })
 
-let x
+let game
 
 
-const body = "lsdkgldsbvlajfcpoashfljda"
 
 io.on("connection", (socket) => {
-
-    const { roomID, username } = socket.handshake.query
-    let room = io.sockets.adapter.rooms.get(roomID)
+    let body = ""
+    const { roomID, username, roomID2 } = socket.handshake.query
+    let room = parseInt(io.sockets.adapter.rooms.get(roomID)?.size)
     const userColor = COLORS[Math.floor(Math.random() * COLORS.length)]
-    if (room.size < 1) {
-        socket.join(roomID)
+
+    socket.join(roomID)
+
+    
+
+    if ( room > 1) {
+        io.to(socket.id).emit("room full", { roomID });
+        return;
     }
+
+    io.to(roomID).emit("room num", room)
 
     io.to(roomID).emit("user join", { username })
 
@@ -32,15 +40,14 @@ io.on("connection", (socket) => {
         io.to(roomID).emit("new message", start)
     })
 
-    socket.on("new letter", (letter, length) => {
+    socket.on("opt", (name) => {
+        io.to(roomID).emit("opt", name)
+    })
+
+
+    socket.on("new letter", (letter) => {
         x = letter[letter.length - 1]
         let l = letter.toString()
-
-        console.log(x);
-        console.log(body[x - 1]);
-        console.log(l);
-
-
         if (body[x - 1] != l[x - 1]) {
             color = "red"
         }
@@ -51,11 +58,19 @@ io.on("connection", (socket) => {
     })
 
     socket.on("new message", () => {
+        body = randomWords({ exactly: 10, join: ' ' })
         io.to(roomID).emit("body", body)
+        
     })
+    socket.on("RPS", (RPS) => {
+        socket.broadcast.to(roomID).emit('RPS', RPS)
+    })
+
+    
 
     socket.on("disconnect", () => {
         io.to(roomID).emit("user leave", { username })
+        io.to(roomID).emit("room num", (room-1))
     })
 
 })
