@@ -16,6 +16,7 @@ const Room = (props) => {
     const Ref = useRef(null);
     const [timer, setTimer] = useState('05');
     const [sen, setSen] = useState("")
+    const [optcolor, setOptColor] = useState("green")
     const [color, setColor] = useState("green")
     const { messages, sendMessage, bodys, letter, sendLetter, setGames, room, sendName, opt } = useSocketHook(id, auth.currentUser?.displayName)
     const [length, setlength] = useState(0)
@@ -86,7 +87,6 @@ const Room = (props) => {
         if (messages == true) {
             clearTimer(getDeadTime())
             setCount(-5)
-            setWPM((10 / count) * 60)
             
         }
     }, [messages]);
@@ -102,9 +102,21 @@ const Room = (props) => {
             setColor("green")
         }
     }
+    function OptcheckLetters(e) {
+        let x = bodys.slice(0, e.length)
+        console.log(e)
+        console.log(x);
+        if (e != x) {
+            setOptColor("red")
+        }
+        else {
+            setOptColor("green")
+        }
+    }
 
     function checkIfDone(e){
         if (e == bodys) {
+            console.log(WPM);
             sendName(`${auth.currentUser?.displayName} Won with ${Math.floor(WPM)} words per min`)
             sendMessage(false)
         }
@@ -140,14 +152,17 @@ const Room = (props) => {
             <div>
             <div>{bodys}</div>
             <div style={{ color: color }}>{body}</div>
+            <div>Opponent ↓</div>
+            <div style={{ color: optcolor }}>{letter}</div>
             <input type="text" autoFocus value={body} onChange={
                 (e) => {
                     checkLetters(e.target.value)
                     checkIfDone(e.target.value)
                     setbody(e.target.value)
                     setlength(e.target.value.length)
-                    sendLetter(e.target.value, e.target.value.length)
-
+                    sendLetter(e.target.value)
+                    setWPM((10 / count) * 60)
+                    OptcheckLetters(e.target.value)
 
                 }} />
             <button onClick={() => {

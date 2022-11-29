@@ -8,7 +8,7 @@ const useSocketHook = (roomID, username) => {
     const socketRef = useRef(null)
     const [messages, setMessages] = useState([])
     const [bodys, setBody] = useState()
-    const [game, setGame] = useState()
+    const [optColor, setOptColor] = useState()
     const [RPS, setRPS] = useState()
     const [opt, setOpt] = useState()
     const [room, setRoom] = useState()
@@ -40,6 +40,10 @@ const useSocketHook = (roomID, username) => {
             setRPS(msg)
         })
 
+        socketRef.current.on("letters", letters => {
+            setLetter(letters)
+        })
+
         socketRef.current.on("opt", msg => {
             setOpt(msg)
         })
@@ -50,7 +54,7 @@ const useSocketHook = (roomID, username) => {
         })
 
         socketRef.current.on("new letter", msg => {
-            setLetter((curr) => [...curr, msg])
+            
         })
 
 
@@ -92,11 +96,11 @@ const useSocketHook = (roomID, username) => {
         socketRef.current.emit("RPS", RPS)
     }
 
-    function sendLetter(letter, length) {
-        socketRef.current.emit("new letter", [letter, length])
+    function sendLetter(letter) {
+        socketRef.current.emit("letters", letter)
     }
 
-    return { sendLetter, sendMessage, messages, bodys, letter, RPS, sendRPS, opt, room, setGames, sendName};
+    return { sendLetter, sendMessage, messages, bodys, letter, RPS, sendRPS, opt, room, setGames, sendName, optColor};
 };
 
 export default useSocketHook;

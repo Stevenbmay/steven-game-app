@@ -66,6 +66,10 @@ io.on("connection", (socket) => {
         socket.broadcast.to(roomID).emit('RPS', RPS)
     })
 
+    socket.on("letters", (letters) => {
+        socket.broadcast.to(roomID).emit('letters', letters)
+    })
+
     
 
     socket.on("disconnect", () => {
