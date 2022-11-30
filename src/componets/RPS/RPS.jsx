@@ -8,9 +8,13 @@ const RPS = () => {
 
     return (
         <div>
-            <h2>Join a Room</h2>
+        <form>
+            <h2>Join a Rock Paper Scissors Room</h2>
             <input type="text" value={roomID} onChange={(e) => setRoomID(e.target.value)} />
+            <div></div>
             <button onClick={() => navigate(`/RPSroom/${roomID}`)}>Join Room</button>
+        </form>
+        <button onClick={() =>(navigate('/menu'))}>BACK</button>
         </div>
     )
 }

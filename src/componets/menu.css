@@ -1,0 +1,12 @@
+.img {
+   border-radius: 10px;
+   height: 200px;
+   width: 200px;
+   transition: transform .2s;
+   border: 5px solid #2980b9;
+  }
+
+  
+  .img:hover {
+    transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+  }

@@ -11,8 +11,11 @@ const useSocketHook = (roomID, username) => {
     const [optColor, setOptColor] = useState()
     const [RPS, setRPS] = useState()
     const [opt, setOpt] = useState()
+    const [nameOpt, setNameOpt] = useState()
     const [room, setRoom] = useState()
+    const [left, setLeft] = useState(false)
     const [letter, setLetter] = useState([])
+    
     let gamess
     function setGames(games) {
         gamess = games
@@ -48,18 +51,17 @@ const useSocketHook = (roomID, username) => {
             setOpt(msg)
         })
 
+        socketRef.current.on("opt name", msg => {
+            setNameOpt(msg)
+        })
+
         
         socketRef.current.on("room num", room => {
             setRoom(room)
         })
 
-        socketRef.current.on("new letter", msg => {
-            
-        })
-
 
         socketRef.current.on("room full", () => {
-            console.log(`${roomID} is full`);
             navigate("/joinRoom");
         })
         
@@ -67,15 +69,8 @@ const useSocketHook = (roomID, username) => {
 
 
         socketRef.current.on("user leave", ({ username, time }) => {
-            setMessages((curr) => [...curr, { time, body: `${username} has left` }])
-            setRPS("")
-            
-            if(gamess === "race"){
-                navigate('/joinRoom')
-            }
-            if(gamess === "RPS"){
-            navigate('/RPS')
-            }
+            setLeft(true)
+            sendMessage(false)
         })
 
         return () => socketRef.current?.disconnect()
@@ -87,10 +82,12 @@ const useSocketHook = (roomID, username) => {
     }
 
     function sendName(name){
-        socketRef.current.emit("opt", name)
-        
+        socketRef.current.emit("opt", name)  
     }
 
+    function sendGame(game){
+        socketRef.current.emit("game", game)
+    }
 
     function sendRPS(RPS) {
         socketRef.current.emit("RPS", RPS)
@@ -100,7 +97,7 @@ const useSocketHook = (roomID, username) => {
         socketRef.current.emit("letters", letter)
     }
 
-    return { sendLetter, sendMessage, messages, bodys, letter, RPS, sendRPS, opt, room, setGames, sendName, optColor};
+    return { sendLetter, sendMessage, sendGame, nameOpt ,  messages, bodys, letter, RPS, sendRPS, opt, room, setGames, sendName, optColor, left};
 };
 
 export default useSocketHook;

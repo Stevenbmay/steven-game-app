@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { auth } from "../firebase.confg";
 import { GoogleAuthProvider, signInWithPopup, } from "firebase/auth";
+import './Login.css'
 
 const provider = new GoogleAuthProvider();
 function LoginPage() {
@@ -20,9 +21,10 @@ function LoginPage() {
     }
 
     return (
-        <div>
-            <h2>login</h2>
-            <button onClick={SignIn}>Sigh In</button>
+        <div className="justify-content-center">
+            <h1>WELCOME TO STEVEN'S GAME APP</h1>
+            <h1>PLEASE SIGN IN</h1>
+            <button className="font-size50 " onClick={SignIn}>Sign In</button>
         </div>
 
     )

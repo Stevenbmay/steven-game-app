@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Figure from './Figure';
 import './hangman.css'
 const words = ['hypnothize', 'programming', 'competition', 'communication' , 'programmer', 'control', 'facility', 'director', 'package', 'hangman'];
@@ -9,6 +10,7 @@ function Hangman() {
   const [correctLetters, setCorrectLetters] = useState([]);
   const [wrongLetters, setWrongLetters] = useState([])
   const [winLose, setWinLose] = useState("");
+  const navigate = useNavigate();
 
   function checkWin() {
     let winlose = "win"
@@ -40,15 +42,14 @@ function Hangman() {
 
   function WrongLetters(){
     return (
-      <div className="wrong-letters-container">
+      <div className='wrong-letters'>
         <div>
           {wrongLetters.length > 0 && 
-            <p>Wrong Guesses</p>
+            <p className='wrong-letters-p'>Wrong Guesses</p>
           }
-          {wrongLetters
-            .map((letter, i) => <span key={i}>{letter}</span>)
-            .reduce((prev, curr) => prev === null ? [curr] : [prev, ', ', curr], null)}
-        </div>
+          {wrongLetters.map((letter, i) =>
+          <span className='wrong-letters-span' key={i}>{letter}</span>).reduce((prev, curr) => prev === null ? [curr] : [prev, ', ', curr], null)}
+          </div>
       </div>
     )
   }
@@ -131,6 +132,7 @@ function Hangman() {
         <WrongLetters/>
       </div>
       <EndMessage/>
+      <button className='font30' onClick={() =>(navigate('/menu'))}>Leave</button>
     </>
   );
 }

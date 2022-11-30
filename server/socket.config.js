@@ -1,18 +1,10 @@
-const express = require("express");
-const http = require("http")
-const socketID = require("socket.io")
-const app = express();
-const PORT = 8080
-const server = http.createServer(app);
-const socketConfig = require("./server/socket.config")
-let randomWords = require('random-words');
-const io = socketID(server, {
-    cors: {
-        oragin: "*"
-    }
-})
-        socketConfig(io)
-        /*
+function socketConfig(io){
+    let randomWords = require('random-words');
+    let body = ""
+
+    io.on("connection", (socket) => {
+        let body = ""
+            const { roomID, username, } = socket.handshake.query
     let room = parseInt(io.sockets.adapter.rooms.get(roomID)?.size)
 
     socket.join(roomID)
@@ -33,6 +25,7 @@ const io = socketID(server, {
 
     socket.on("opt", (name) => {
         io.to(roomID).emit("opt", name)
+        socket.broadcast.to(roomID).emit("opt name", name)
     })
 
     socket.on("new message", () => {
@@ -55,12 +48,7 @@ const io = socketID(server, {
         io.to(roomID).emit("user leave", { username })
         io.to(roomID).emit("room num", (room-1))
     })
-    */
+})
+}
 
-
-
-app.get("/", (req, res) => {
-    return res.send("Hello")
-});
-
-server.listen(PORT, () => console.log(`Backend listening on port: ${PORT}`));
+module.exports = socketConfig

@@ -1,26 +1,21 @@
-import { startTransition, useCallback, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
-import { auth } from "../firebase.confg";
-import useSocketHook from "../useSocket";
-import ChatDisplay from "./chatDisplay";
-import { v4 as uuidv4 } from "uuid";
-import Countdown from "react-countdown";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { auth } from "../../firebase.confg";
+import useSocketHook from "../../Hooks/useSocket";
+import './Racer.css'
 
 
-
-
-const Room = (props) => {
+const RaceRoom = () => {
     const [body, setbody] = useState("")
-    const { id } = useParams();
-    const bottomRef = useRef(null);
+    const { id } = useParams()
     const Ref = useRef(null);
+    const navigate = useNavigate();
     const [timer, setTimer] = useState('05');
     const [sen, setSen] = useState("")
     const [optcolor, setOptColor] = useState("green")
+    const [optLetters, setOptLetters] = useState()
     const [color, setColor] = useState("green")
     const { messages, sendMessage, bodys, letter, sendLetter, setGames, room, sendName, opt } = useSocketHook(id, auth.currentUser?.displayName)
-    const [length, setlength] = useState(0)
-    const socketRef = useRef(null)
     const [count, setCount] = useState(0);
     const [WPM, setWPM] = useState();
 
@@ -78,8 +73,9 @@ const Room = (props) => {
    
 
     useEffect(() => {
-        
         setSen(opt)
+        setOptLetters(letter)
+
         if(timer == 0){
             setCount(0)
         }
@@ -87,6 +83,11 @@ const Room = (props) => {
         if (messages == true) {
             clearTimer(getDeadTime())
             setCount(-5)
+            
+            
+        }
+        if (messages == false) {
+            
             
         }
     }, [messages]);
@@ -116,24 +117,26 @@ const Room = (props) => {
 
     function checkIfDone(e){
         if (e == bodys) {
-            console.log(WPM);
+            console.log(WPM)
+            setOptLetters("")
             sendName(`${auth.currentUser?.displayName} Won with ${Math.floor(WPM)} words per min`)
             sendMessage(false)
+            setbody("")
         }
 
     }
 
-
+function Game(){
     if(room == 1){
     if (messages == false) {
         
         return (
             <div>
-                <div>{sen}</div>
-                <button onClick={() => {
+                <h1>{sen}</h1>
+                <button className='font30' onClick={() => {
                     sendMessage(true)
                     setbody("")
-                }}>Start</button>
+                }}>START GAME</button>
 
             </div>
         )
@@ -142,44 +145,49 @@ const Room = (props) => {
     if (messages == true && timer !== "00") {
        
         return(
-        <div>get ready {timer}</div>
+            <div>
+        <h1>get ready</h1>
+        <h1 className='font30'>{timer}</h1>
+        </div>
         )
     }
-
 
     if (messages == true && timer == "00") {
         return (
             <div>
-            <div>{bodys}</div>
-            <div style={{ color: color }}>{body}</div>
+            <div className='font30'>{bodys}</div>
+            <div className="race-text font30" style={{ color: color }}>{body}</div>
             <div>Opponent ↓</div>
-            <div style={{ color: optcolor }}>{letter}</div>
-            <input type="text" autoFocus value={body} onChange={
+            <div className="race-text font30" style={{ color: optcolor }}>{letter}</div>
+            <input type="text" autoFocus value={body} onPaste={(e)=>{e.preventDefault()
+             }} onChange={
                 (e) => {
                     checkLetters(e.target.value)
                     checkIfDone(e.target.value)
                     setbody(e.target.value)
-                    setlength(e.target.value.length)
                     sendLetter(e.target.value)
                     setWPM((10 / count) * 60)
-                    OptcheckLetters(e.target.value)
-
+                    OptcheckLetters(letter)
                 }} />
-            <button onClick={() => {
-                sendMessage(false)
-                setbody("")
-            }}>send</button>
         </div>
         )
     }
 }
 else{
     return(
-        <div>Waiting For someone to join</div>
+        <h2>Waiting For someone to join...</h2>
     )
 
 }
 }
 
+return(
+    <div>
+        <Game/>
+        <button className='font30' onClick={() =>(navigate('/race'))}>Leave</button>
+    </div>
+)
+}
 
-export default Room;
+
+export default RaceRoom;

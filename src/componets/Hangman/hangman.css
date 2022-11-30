@@ -1,17 +1,4 @@
-* {
-    box-sizing: border-box;
-  }
-  
-  body, #root {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 80vh;
-    margin: 0;
-    overflow: hidden;
-  }
-  
-  h1 {
+    h1 {
     margin: 20px 0 0;
   }
   
@@ -23,19 +10,8 @@
     width: 450px;
   }
   
-  .figure-container {
-    border: 2px solid black;
-    fill: transparent;
-    stroke: rgb(0, 0, 0);
-    stroke-width: 4px;
-    stroke-linecap: round;
-  }
   
-  .figure-part {
-    display: none;
-  }
-  
-  .wrong-letters-container {
+  .wrong-letters {
     position: absolute;
     top: 20px;
     right: 20px;
@@ -44,11 +20,11 @@
     text-align: right;
   }
   
-  .wrong-letters-container p {
+  .wrong-letters-p {
     margin: 0 0 5px;
   }
   
-  .wrong-letters-container span {
+  .wrong-letters-span {
     font-size: 24px;
   }
   
