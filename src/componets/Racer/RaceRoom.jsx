@@ -94,8 +94,6 @@ const RaceRoom = () => {
 
     function checkLetters(e) {
         let x = bodys.slice(0, e.length)
-        console.log(e)
-        console.log(x);
         if (e != x) {
             setColor("red")
         }
@@ -105,8 +103,6 @@ const RaceRoom = () => {
     }
     function OptcheckLetters(e) {
         let x = bodys.slice(0, e.length)
-        console.log(e)
-        console.log(x);
         if (e != x) {
             setOptColor("red")
         }
@@ -117,7 +113,6 @@ const RaceRoom = () => {
 
     function checkIfDone(e){
         if (e == bodys) {
-            console.log(WPM)
             setOptLetters("")
             sendName(`${auth.currentUser?.displayName} Won with ${Math.floor(WPM)} words per min`)
             sendMessage(false)

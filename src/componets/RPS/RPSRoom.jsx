@@ -128,7 +128,6 @@ if(selected == true &&  optRPS?.user !== undefined){
     )
 }
 if(selected == true && optRPS?.user == undefined){
-    console.log(optRPS?.user);
     return(
     <h2>Waiting for opt...</h2>
     )
