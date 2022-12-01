@@ -157,7 +157,7 @@ const RaceRoom = () => {
                         <div className="race-text font30" style={{ color: color }}>{body}</div>
                         <div>Opponent ↓</div>
                         <div className="race-text font30" style={{ color: optcolor }}>{optLetters}</div>
-                        <input type="text" autoFocus value={body} onPaste={(e) => {
+                        <input className="input" type="text" autoFocus value={body} onPaste={(e) => {
                             e.preventDefault()
                         }} onChange={
                             (e) => {
