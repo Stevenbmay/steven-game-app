@@ -46,18 +46,18 @@ const RPSRoom = () => {
         setGames("RPS")
         setOptRPS(RPS)
         setEndGame()
-        if (left) {
+        if (left == true) {
             setCountwin(0)
             setOptwin(0)
         }
-        if (messages === false) {
+        if (messages == false) {
             setUser(undefined)
             sendRPS(undefined)
             setSelected(false)
             setEndGame("")
             sendMessage(true)
         }
-        if (room === null || room === 0) {
+        if (room == null || room == 0) {
             setSelected(false)
             setEndGame("")
             setUser(undefined)
@@ -68,7 +68,7 @@ const RPSRoom = () => {
 
     function Selection() {
         if (room == 1) {
-            if (selected === false) {
+            if (selected == false) {
                 return (
                     <div>
                         <button className="button" onClick={() => {
@@ -110,7 +110,7 @@ const RPSRoom = () => {
                 }
             }
 
-            if (selected && optRPS?.user !== undefined) {
+            if (selected == true && optRPS?.user !== undefined) {
                 callback()
                 return (
                     <div>
@@ -124,7 +124,7 @@ const RPSRoom = () => {
                     </div>
                 )
             }
-            if (selected == true && optRPS?.user === undefined) {
+            if (selected == true && optRPS?.user == undefined) {
                 return (
                     <h2>Waiting for opt...</h2>
                 )
