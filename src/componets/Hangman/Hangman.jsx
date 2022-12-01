@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Figure from './Figure';
 import './hangman.css'
-const words = ['hypnothize', 'programming', 'competition', 'communication' , 'programmer', 'control', 'facility', 'director', 'package', 'hangman'];
+const words = ['hypnothize', 'programming', 'competition', 'communication', 'programmer', 'control', 'facility', 'director', 'package', 'hangman'];
 let selectedWord = words[Math.floor(Math.random() * words.length)];
 
 function Hangman() {
@@ -15,18 +15,18 @@ function Hangman() {
   function checkWin() {
     let winlose = "win"
     selectedWord.split('').forEach(letter => {
-      if(!correctLetters.includes(letter)){
+      if (!correctLetters.includes(letter)) {
         winlose = ""
       }
     })
-    if(wrongLetters.length === 6) {
-        winlose = "lose"
-        
+    if (wrongLetters.length === 6) {
+      winlose = "lose"
+
     }
     setWinLose(winlose)
   }
 
-  function Word(){
+  function Word() {
     return (
       <div className="word">
         {selectedWord.split('').map((letter, i) => {
@@ -40,16 +40,16 @@ function Hangman() {
     )
   }
 
-  function WrongLetters(){
+  function WrongLetters() {
     return (
       <div className='wrong-letters'>
         <div>
-          {wrongLetters.length > 0 && 
+          {wrongLetters.length > 0 &&
             <p className='wrong-letters-p'>Wrong Guesses</p>
           }
           {wrongLetters.map((letter, i) =>
-          <span className='wrong-letters-span' key={i}>{letter}</span>).reduce((prev, curr) => prev === null ? [curr] : [prev, ', ', curr], null)}
-          </div>
+            <span className='wrong-letters-span' key={i}>{letter}</span>).reduce((prev, curr) => prev === null ? [curr] : [prev, ', ', curr], null)}
+        </div>
       </div>
     )
   }
@@ -64,40 +64,40 @@ function Hangman() {
     setWrongLetters([]);
     setWinLose("")
   }
-  useEffect(()=>{
+  useEffect(() => {
     checkWin()
   })
-  
 
 
-  function EndMessage(){
+
+  function EndMessage() {
     let endMessage = ''
-    if(winLose == 'win' ) {
+    if (winLose === 'win') {
       endMessage = 'You won!'
       setPlayable(false)
 
-    } else if(winLose === 'lose' ) {
+    } else if (winLose === 'lose') {
       endMessage = `You lost. The word was: ${selectedWord}`;
       setPlayable(false)
     }
 
-    if(playable == false){
-  
-    return (
-      <div>
+    if (playable === false) {
+
+      return (
         <div>
-          <h2>{endMessage}</h2>
-          <button onClick={playAgain}>Play Again</button>
+          <div>
+            <h2>{endMessage}</h2>
+            <button onClick={playAgain}>Play Again</button>
+          </div>
         </div>
-      </div>
-    )
-  }
+      )
+    }
   }
 
   useEffect(() => {
     const handleKeydown = event => {
       const { key, keyCode } = event;
-      
+
       if (playable && keyCode >= 65 && keyCode <= 90) {
         const letter = key.toLowerCase()
 
@@ -106,12 +106,12 @@ function Hangman() {
           if (!correctLetters.includes(letter)) {
             setCorrectLetters(currentLetters => [...currentLetters, letter]);
             return
-          } 
+          }
         } else {
           if (!wrongLetters.includes(letter)) {
             setWrongLetters(currentLetters => [...currentLetters, letter])
             return
-          } 
+          }
         }
       }
     }
@@ -125,14 +125,14 @@ function Hangman() {
 
   return (
     <>
-    <h1>Hangeman</h1>
+      <h1>Hangeman</h1>
       <div className="game-container">
         <Figure wrongLetters={wrongLetters} />
-        <Word/>
-        <WrongLetters/>
+        <Word />
+        <WrongLetters />
       </div>
-      <EndMessage/>
-      <button className='font30' onClick={() =>(navigate('/menu'))}>Leave</button>
+      <EndMessage />
+      <button className='font30' onClick={() => (navigate('/menu'))}>Leave</button>
     </>
   );
 }
