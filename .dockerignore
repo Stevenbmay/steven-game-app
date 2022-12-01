@@ -1,2 +1,4 @@
-node_midules
-build
+Dockerfile
+.dockerignore
+node_modules
+.git

@@ -28,11 +28,14 @@ const RaceRoom = () => {
             return () => clearInterval(id);
         },
         [count],
+    )
 
-    );
-
-
-
+    useEffect(() => {
+        setOptLetters(letter)
+        if (messages == true) {
+            OptcheckLetters(letter)
+        }
+    }, [letter])
 
     const getTimeRemaining = (e) => {
         const total = Date.parse(e) - Date.parse(new Date());
@@ -43,19 +46,19 @@ const RaceRoom = () => {
             total, hours, minutes, seconds
         };
     }
-  
-  
+
+
     const startTimer = (e) => {
-        let { total, hours, minutes, seconds } 
-                    = getTimeRemaining(e);
+        let { total, hours, minutes, seconds }
+            = getTimeRemaining(e);
         if (total >= 0) {
             setTimer(
-               (seconds > 9 ? seconds : '0' + seconds)
+                (seconds > 9 ? seconds : '0' + seconds)
             )
         }
     }
-  
-  
+
+
     const clearTimer = (e) => {
         setTimer('05');
         if (Ref.current) clearInterval(Ref.current);
@@ -64,33 +67,32 @@ const RaceRoom = () => {
         }, 1000)
         Ref.current = id;
     }
-  
+
     const getDeadTime = () => {
         let deadline = new Date();
         deadline.setSeconds(deadline.getSeconds() + 5);
-        return deadline;
+        return deadline
     }
-   
+
 
     useEffect(() => {
         setSen(opt)
         setOptLetters(letter)
 
-        if(timer == 0){
+        if (timer == 0) {
             setCount(0)
         }
+
         setGames("race")
-        if (messages == true) {
+        if (messages) {
             clearTimer(getDeadTime())
             setCount(-5)
-            
-            
         }
+
         if (messages == false) {
-            
-            
+            sendLetter("")
         }
-    }, [messages]);
+    }, [messages])
 
     function checkLetters(e) {
         let x = bodys.slice(0, e.length)
@@ -101,6 +103,7 @@ const RaceRoom = () => {
             setColor("green")
         }
     }
+
     function OptcheckLetters(e) {
         let x = bodys.slice(0, e.length)
         if (e != x) {
@@ -111,7 +114,7 @@ const RaceRoom = () => {
         }
     }
 
-    function checkIfDone(e){
+    function checkIfDone(e) {
         if (e == bodys) {
             setOptLetters("")
             sendName(`${auth.currentUser?.displayName} Won with ${Math.floor(WPM)} words per min`)
@@ -121,67 +124,67 @@ const RaceRoom = () => {
 
     }
 
-function Game(){
-    if(room == 1){
-    if (messages == false) {
-        
-        return (
-            <div>
-                <h1>{sen}</h1>
-                <button className='font30' onClick={() => {
-                    sendMessage(true)
-                    setbody("")
-                }}>START GAME</button>
+    function Game() {
+        if (room == 1) {
+            if (messages == false) {
 
-            </div>
-        )
+                return (
+                    <div>
+                        <h1>{sen}</h1>
+                        <button className='font30' onClick={() => {
+                            sendMessage(true)
+                            setbody("")
+                        }}>START GAME</button>
+
+                    </div>
+                )
+            }
+
+            if (messages == true && timer !== "00") {
+
+                return (
+                    <div>
+                        <h1>get ready</h1>
+                        <h1 className='font30'>{timer}</h1>
+                    </div>
+                )
+            }
+
+            if (messages == true && timer == "00") {
+                return (
+                    <div>
+                        <div className='font30'>{bodys}</div>
+                        <div className="race-text font30" style={{ color: color }}>{body}</div>
+                        <div>Opponent ↓</div>
+                        <div className="race-text font30" style={{ color: optcolor }}>{optLetters}</div>
+                        <input type="text" autoFocus value={body} onPaste={(e) => {
+                            e.preventDefault()
+                        }} onChange={
+                            (e) => {
+                                checkLetters(e.target.value)
+                                checkIfDone(e.target.value)
+                                setbody(e.target.value)
+                                sendLetter(e.target.value)
+                                setWPM((10 / count) * 60)
+                            }} />
+                    </div>
+                )
+            }
+        }
+
+        else {
+            return (
+                <h2>Waiting For someone to join...</h2>
+            )
+        }
     }
 
-    if (messages == true && timer !== "00") {
-       
-        return(
-            <div>
-        <h1>get ready</h1>
-        <h1 className='font30'>{timer}</h1>
+    return (
+        <div>
+            <Game />
+            <button className='font30' onClick={() => (navigate('/race'))}>Leave</button>
         </div>
-        )
-    }
-
-    if (messages == true && timer == "00") {
-        return (
-            <div>
-            <div className='font30'>{bodys}</div>
-            <div className="race-text font30" style={{ color: color }}>{body}</div>
-            <div>Opponent ↓</div>
-            <div className="race-text font30" style={{ color: optcolor }}>{letter}</div>
-            <input type="text" autoFocus value={body} onPaste={(e)=>{e.preventDefault()
-             }} onChange={
-                (e) => {
-                    checkLetters(e.target.value)
-                    checkIfDone(e.target.value)
-                    setbody(e.target.value)
-                    sendLetter(e.target.value)
-                    setWPM((10 / count) * 60)
-                    OptcheckLetters(letter)
-                }} />
-        </div>
-        )
-    }
-}
-else{
-    return(
-        <h2>Waiting For someone to join...</h2>
     )
-
-}
-}
-
-return(
-    <div>
-        <Game/>
-        <button className='font30' onClick={() =>(navigate('/race'))}>Leave</button>
-    </div>
-)
 }
 
 

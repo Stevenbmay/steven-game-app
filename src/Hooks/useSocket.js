@@ -15,17 +15,17 @@ const useSocketHook = (roomID, username) => {
     const [room, setRoom] = useState()
     const [left, setLeft] = useState(false)
     const [letter, setLetter] = useState([])
-    
+
     let gamess
     function setGames(games) {
         gamess = games
     }
-    
+
 
     useEffect(() => {
-        
+
         if (!roomID || !username) return
-        socketRef.current = io("http://localhost:8080", { query: { username, roomID } })
+        socketRef.current = io("https://steven-game-app.fly.dev", { query: { username, roomID } })
 
 
         socketRef.current.on("room full", ({ roomID }) => {
@@ -55,7 +55,7 @@ const useSocketHook = (roomID, username) => {
             setNameOpt(msg)
         })
 
-        
+
         socketRef.current.on("room num", room => {
             setRoom(room)
         })
@@ -64,7 +64,7 @@ const useSocketHook = (roomID, username) => {
         socketRef.current.on("room full", () => {
             navigate("/joinRoom");
         })
-        
+
 
 
 
@@ -81,11 +81,11 @@ const useSocketHook = (roomID, username) => {
         socketRef.current.emit("new message", start)
     }
 
-    function sendName(name){
-        socketRef.current.emit("opt", name)  
+    function sendName(name) {
+        socketRef.current.emit("opt", name)
     }
 
-    function sendGame(game){
+    function sendGame(game) {
         socketRef.current.emit("game", game)
     }
 
@@ -97,7 +97,7 @@ const useSocketHook = (roomID, username) => {
         socketRef.current.emit("letters", letter)
     }
 
-    return { sendLetter, sendMessage, sendGame, nameOpt ,  messages, bodys, letter, RPS, sendRPS, opt, room, setGames, sendName, optColor, left};
+    return { sendLetter, sendMessage, sendGame, nameOpt, messages, bodys, letter, RPS, sendRPS, opt, room, setGames, sendName, optColor, left };
 };
 
 export default useSocketHook;

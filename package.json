@@ -3,12 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/node": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "babel-loader": "^9.1.0",
+    "babel-plugin-inline-dotenv": "^1.7.0",
+    "dotenv": "^16.0.3",
+    "dotenv-webpack": "^8.0.1",
     "express": "^4.18.2",
     "firebase": "^9.13.0",
-    "moment": "^2.29.4",
+    "nodemon": "^2.0.20",
+    "npm-run-all": "^4.1.5",
     "random-sentence": "^1.0.4",
     "random-words": "^1.2.0",
     "react": "^18.2.0",
@@ -20,15 +29,18 @@
     "socket.io": "^4.5.3",
     "socket.io-client": "^4.5.3",
     "util": "^0.12.5",
-    "uuid": "^9.0.0",
-    "uuidv4": "^6.2.13",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "webpack": "^5.75.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "node server.prod.js",
+    "front": "react-scripts start",
+    "build-front": "react-scripts build",
+    "build": "npm-run-all prod build-front",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "back": "SET NODE_ENV=DEVELOPMENT && nodemon --exec babel-node server.js",
+    "prod": "webpack --config webpack.config.server.js"
   },
   "eslintConfig": {
     "extends": [
@@ -47,5 +59,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "webpack-cli": "^5.0.0"
   }
 }
